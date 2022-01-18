@@ -1,0 +1,110 @@
+import requests
+import json
+import datetime
+
+
+# A function to get the current year.
+def currentDate ():
+    # Import datetime
+    from datetime import datetime
+    
+    currentYear = datetime.now().year   
+    return currentYear
+currentYear = currentDate() 
+
+#Create a connection to the end points and retrieve the data.
+bookList = requests.get("https://p8doqtvi9f.execute-api.us-west-2.amazonaws.com/rii-dev-interview/books")
+authorList = requests.get("https://p8doqtvi9f.execute-api.us-west-2.amazonaws.com/rii-dev-interview/authors")
+
+# Json file.
+bookJson = bookList.json()
+authorJson = authorList.json()
+
+# Create variables. 
+booksNotAuthor = []
+nameAuthor = []
+ageAuthor = []
+listBooksTitle = [] 
+listBooksPublished = []
+listBooksAuthor = []
+yearDate = []
+booksAgeList = []
+counter1 = 0
+counter2 = 0
+numberOfAuthors = len(nameAuthor) 
+
+# Put the names of the authors in a list.
+for n in authorJson:
+    authorName = n['name']
+    nameAuthor.append(authorName)
+
+# Put the ages of the authors in a list. 
+for age in authorJson:
+    authorAge = age['age']
+    ageAuthor.append(authorAge)
+
+# Put book title in a list.
+for bt in bookJson:
+    bookTitle = bt['title']
+    listBooksTitle.append(bookTitle)
+    
+# Put the publish date of the books in a list. 
+for bp in bookJson:
+    bookPublished = bp['published']
+    listBooksPublished.append(bookPublished)
+
+# Put Authors names in a list.
+for ba in bookJson:
+    bookAuthor = ba['author']
+    listBooksAuthor.append(bookAuthor)
+
+# Get the year that the book was published from the publish date.
+for dy in listBooksPublished:
+    year = datetime.datetime.strptime(dy, "%m-%d-%Y")
+    yearDate.append(year.year)
+ 
+# Use the year of publish and the current year to determine the age of the book.
+for bAge in yearDate:
+    booksAge = currentYear - bAge
+    booksAgeList.append(booksAge)
+
+# Get the name, author, and age of the book using a for loop.
+for book in listBooksTitle:
+    counter3 = 0
+    counter2 = 0
+    authorBook = listBooksAuthor[counter1]
+    ageBook = booksAgeList[counter1]
+    
+    # While loop that loops through the authors.
+    while counter3 < numberOfAuthors:
+        
+        # If statement that matches the author to the book. 
+        # by comparing a list of the authors to the books current author.
+        # Then it calculates when the author wrote the book using.
+        # the author age and the books age.
+        if authorBook == nameAuthor[counter2]:
+            authAge = ageAuthor[counter2]
+            ageAuthorBook = authAge - ageBook       
+            counter3 = numberOfAuthors + 1
+            
+            # Checks to see if the book was wrote before the author was 10.
+            if ageAuthorBook < 10:
+                booksNotAuthor.append(book)
+           
+        # elif statement that catches if the author doesn't exists,
+        # and prints out a message telling you author doesn't exist.
+        elif counter2 == numberOfAuthors-1:
+            print("No Author Exists for the book", book)    
+            counter2 = 0
+         
+        # else statement to increase the counter and check the next author on the list.   
+        else:
+            counter2 += 1
+            counter3 +=1
+            
+    # increase counter that gets the name and age of the book you want 
+    # to compare to the author age.
+    counter1 += 1
+    
+# Print the list of books that couldn't have been written by the author.
+print("List of books that couldn't have been written by the author"+'\n', booksNotAuthor)
