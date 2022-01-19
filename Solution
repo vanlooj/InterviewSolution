@@ -12,7 +12,7 @@ def currentDate ():
     return currentYear
 currentYear = currentDate() 
 
-#Create a connection to the end points and retrieve the data.
+#Create a connection to the endpoints and retrieve the data.
 bookList = requests.get("https://p8doqtvi9f.execute-api.us-west-2.amazonaws.com/rii-dev-interview/books")
 authorList = requests.get("https://p8doqtvi9f.execute-api.us-west-2.amazonaws.com/rii-dev-interview/authors")
 
@@ -43,7 +43,7 @@ for age in authorJson:
     authorAge = age['age']
     ageAuthor.append(authorAge)
 
-# Put book title in a list.
+# Create a list of the titles of the books
 for bt in bookJson:
     bookTitle = bt['title']
     listBooksTitle.append(bookTitle)
@@ -68,14 +68,14 @@ for bAge in yearDate:
     booksAge = currentYear - bAge
     booksAgeList.append(booksAge)
 
-# Get the name, author, and age of the book using a for loop.
+# Go through the list of books titles and get the author and age of the book.
 for book in listBooksTitle:
     counter3 = 0
     counter2 = 0
     authorBook = listBooksAuthor[counter1]
     ageBook = booksAgeList[counter1]
     
-    # While loop that loops through the authors.
+    # While loop that loops through the list of authors.
     while counter3 < numberOfAuthors:
         
         # If statement that matches the author to the book. 
@@ -102,8 +102,7 @@ for book in listBooksTitle:
             counter2 += 1
             counter3 +=1
             
-    # increase counter that gets the name and age of the book you want 
-    # to compare to the author age.
+    # increase counter to loop through the list of book titles.
     counter1 += 1
     
 # Print the list of books that couldn't have been written by the author.
